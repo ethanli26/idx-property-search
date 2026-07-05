@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const listingsRouter = require("./routes/listings")
 require("dotenv").config();
 const pool = require("./db");
 
@@ -7,11 +8,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/properties", listingsRouter);
 
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");
-    res.json({ status: "ok", database: "connected" });
+    res.json({ status: "ok", database: "connected", timestamp: new Date().toISOString()});
   } catch (error) {
     res.status(500).json({ status: "error", database: "disconnected" });
   }
