@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const listingsRouter = require("./routes/listings")
+const requestLog = require("./middleware/requestLog");
 require("dotenv").config();
 const pool = require("./db");
 
@@ -8,6 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(requestLog);
 app.use("/api/properties", listingsRouter);
 
 app.get("/api/health", async (req, res) => {

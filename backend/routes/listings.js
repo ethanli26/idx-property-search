@@ -86,4 +86,68 @@ listingsRouter.get("/", async (req, res) => {
   }
 });
 
+//GET /api/properties/:id/openhouses — open house events for one property
+//must be registered BEFORE /:id, or Express matches /:id greedily
+listingsRouter.get("/:id/openhouses", async (req, res) => {
+  try {
+    const listingId = req.params.id;
+
+    if (!listingId || listingId.length > 50) {
+      return res.status(400).json({ error: "Invalid listing ID" });
+    }
+
+    //confirm the property exists first — a missing property is a 404
+    const [propertyRows] = await pool.query(
+      "SELECT L_ListingID FROM rets_property WHERE L_ListingID = ?",
+      [listingId]
+    );
+
+    if (propertyRows.length === 0) {
+      return res
+        .status(404)
+        .json({ error: `No property found with listing ID ${listingId}` });
+    }
+
+    //fetch the open houses, ordered by date then start time
+    const [openHouseRows] = await pool.query(
+      `SELECT * FROM rets_openhouse
+       WHERE L_ListingID = ?
+       ORDER BY OpenHouseDate, OH_StartTime`,
+      [listingId]
+    );
+
+    //empty array is a valid answer, the property just has no events
+    res.json(openHouseRows);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch open houses" });
+  }
+});
+
+//GET /api/properties/:id — returns one property, or 404 if not found
+listingsRouter.get("/:id", async (req, res) => {
+  try {
+    const listingId = req.params.id;
+
+    //validate the ID before it touches the database
+    if (!listingId || listingId.length > 50) {
+      return res.status(400).json({ error: "Invalid listing ID" });
+    }
+
+    const [rows] = await pool.query(
+      "SELECT * FROM rets_property WHERE L_ListingID = ?",
+      [listingId]
+    );
+
+    if (rows.length === 0) {
+      return res
+        .status(404)
+        .json({ error: `No property found with listing ID ${listingId}` });
+    }
+
+    res.json(rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch property" });
+  }
+});
+
 module.exports = listingsRouter;
