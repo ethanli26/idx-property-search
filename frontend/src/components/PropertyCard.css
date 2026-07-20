@@ -1,0 +1,74 @@
+.listing-card {
+  border: 1px solid #DFD9CF;
+  background: #FBFAF7;
+  overflow: hidden;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: border-color 0.18s ease;
+  cursor: pointer;
+}
+
+.listing-card:hover {
+  border-color: #16202E;
+}
+
+.listing-card__image {
+  aspect-ratio: 4 / 3;
+  background: #E3DED4;
+}
+
+.listing-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.listing-card__no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.594rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9B958A;
+}
+
+.listing-card__body {
+  padding: 12px 13px 15px;
+}
+
+.listing-card__price {
+  margin: 0 0 5px;
+  font-size: 1.19rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #16202E;
+}
+
+.listing-card__address {
+  margin: 0 0 3px;
+  font-size: 0.781rem;
+  font-weight: 400;
+  color: #2B3446;
+}
+
+.listing-card__region {
+  margin: 0 0 9px;
+  font-size: 0.594rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+}
+
+.listing-card__stats {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid #A8894F;
+  font-size: 0.656rem;
+  font-weight: 300;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #5A554B;
+  width: fit-content;
+}
