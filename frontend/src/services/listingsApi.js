@@ -1,3 +1,18 @@
+export async function loadPriceDistribution(params = {}) {
+  const search = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== "" && value !== null && value !== undefined) {
+      search.append(key, value);
+    }
+  });
+
+  const query = search.toString();
+  return requestJson(
+    query ? `${BASE_PATH}/price-distribution?${query}` : `${BASE_PATH}/price-distribution`
+  );
+}
+
 //All communication with the property API lives here.
 //Components import these functions instead of calling fetch directly.
 

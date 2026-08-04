@@ -1,0 +1,94 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 40px;
+  padding-top: 26px;
+  border-top: 1px solid #E9E4DA;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pagination__step {
+  font-family: inherit;
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #16202E;
+  background: transparent;
+  border: 1px solid #DFD9CF;
+  border-radius: 0;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pagination__step:hover:not(:disabled) {
+  border-color: #16202E;
+}
+
+/* the ends of the set are a dead end, not an error, so they read as muted */
+.pagination__step:disabled {
+  color: #B5AEA2;
+  border-color: #EDE8DF;
+  cursor: default;
+}
+
+.pagination__pages {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination__page {
+  min-width: 32px;
+  font-family: inherit;
+  font-size: 0.813rem;
+  font-weight: 400;
+  color: #8A8378;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0;
+  padding: 7px 4px;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.pagination__page:hover {
+  color: #16202E;
+  border-color: #DFD9CF;
+}
+
+/* the current page is a statement of position, so it carries the full weight */
+.pagination__page--current {
+  color: #F2EFE9;
+  background: #16202E;
+  border-color: #16202E;
+  cursor: default;
+}
+
+.pagination__page--current:hover {
+  color: #F2EFE9;
+  border-color: #16202E;
+}
+
+.pagination__gap {
+  min-width: 20px;
+  text-align: center;
+  font-size: 0.813rem;
+  color: #B5AEA2;
+  user-select: none;
+}
+
+/* on narrow screens the page run wraps rather than pushing the steps off-screen */
+@media (max-width: 560px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
