@@ -1,0 +1,85 @@
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #E3DED4;
+  overflow: hidden;
+}
+
+.carousel__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.594rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9B958A;
+}
+
+/* the arrows stay out of the way until the card is hovered, so the grid reads
+   as photography rather than as a row of controls */
+.carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: #16202E;
+  background: rgba(251, 250, 247, 0.92);
+  border: 1px solid #DFD9CF;
+  border-radius: 50%;
+  padding: 0 0 2px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.carousel:hover .carousel__arrow,
+.carousel__arrow:focus-visible {
+  opacity: 1;
+}
+
+.carousel__arrow:hover {
+  background: #FBFAF7;
+}
+
+.carousel__arrow--prev {
+  left: 8px;
+}
+
+.carousel__arrow--next {
+  right: 8px;
+}
+
+.carousel__counter {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  font-size: 0.594rem;
+  letter-spacing: 0.1em;
+  color: #F2EFE9;
+  background: rgba(22, 32, 46, 0.72);
+  padding: 3px 7px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* touch devices have no hover, so the arrows stay visible there */
+@media (hover: none) {
+  .carousel__arrow {
+    opacity: 1;
+  }
+}

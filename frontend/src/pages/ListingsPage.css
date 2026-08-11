@@ -51,6 +51,32 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 22px 16px;
+  transition: opacity 0.18s ease;
+}
+
+/* a page change keeps the previous results on screen while the next set loads.
+   Dimming says "working" without throwing the user's place away. */
+.listings__grid--busy {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* the count keeps its text while refreshing, so it pulses rather than blanking */
+.listings__count--busy {
+  animation: listings-pulse 1s ease-in-out infinite;
+}
+
+@keyframes listings-pulse {
+  50% {
+    opacity: 0.42;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listings__count--busy {
+    animation: none;
+    opacity: 0.6;
+  }
 }
 
 .listings__skeleton {

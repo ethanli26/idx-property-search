@@ -1,0 +1,72 @@
+.property-map {
+  margin-top: 34px;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.property-map__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.property-map__title {
+  margin: 0;
+  font-size: 0.688rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #16202E;
+}
+
+.property-map__directions {
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #16202E;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.property-map__directions:hover {
+  color: #A8894F;
+}
+
+.property-map__frame {
+  width: 100%;
+  height: 320px;
+  border: 1px solid #DFD9CF;
+  display: block;
+}
+
+.property-map__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 320px;
+  padding: 20px;
+  text-align: center;
+  background: #EFEAE1;
+  border: 1px solid #DFD9CF;
+}
+
+.property-map__placeholder-title {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8A8378;
+}
+
+.property-map__placeholder-body {
+  margin: 0;
+  max-width: 380px;
+  font-size: 0.75rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #9B958A;
+}

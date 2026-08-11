@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import ListingsPage from "./ListingsPage";
 import { loadListings } from "../services/listingsApi";
 
@@ -49,6 +50,17 @@ function pagedSource(total) {
   };
 }
 
+//PropertyCard renders a Link, which needs a router context to mount
+function renderListings() {
+  return render(
+    <MemoryRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
+      <ListingsPage />
+    </MemoryRouter>
+  );
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
   //jsdom has no layout, so the scroll the page performs on a page change is stubbed
@@ -59,7 +71,7 @@ describe("ListingsPage", () => {
   test("shows the empty state when nothing matches", async () => {
     loadListings.mockResolvedValue(page([]));
 
-    render(<ListingsPage />);
+    renderListings();
 
     expect(await screen.findByText("No properties found")).toBeInTheDocument();
   });
@@ -75,7 +87,7 @@ describe("ListingsPage", () => {
       .mockReturnValueOnce(stale.promise) //the search that gets superseded
       .mockReturnValueOnce(fresh.promise); //the clear that supersedes it
 
-    render(<ListingsPage />);
+    renderListings();
     await screen.findByText("Initial Ave");
 
     fireEvent.change(screen.getByLabelText("City"), {
@@ -105,7 +117,7 @@ describe("ListingsPage pagination", () => {
   test("keeps the active filters and scrolls up when moving to another page", async () => {
     loadListings.mockImplementation(pagedSource(45));
 
-    render(<ListingsPage />);
+    renderListings();
     await screen.findByText("Address 1");
 
     fireEvent.change(screen.getByLabelText("City"), {
@@ -130,7 +142,7 @@ describe("ListingsPage pagination", () => {
   test("returns to the first page when new filters are applied", async () => {
     loadListings.mockImplementation(pagedSource(45));
 
-    render(<ListingsPage />);
+    renderListings();
     await screen.findByText("Address 1");
 
     fireEvent.click(screen.getByRole("button", { name: "Page 3" }));

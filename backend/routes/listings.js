@@ -1,8 +1,11 @@
 const express = require("express");
 const listingsRouter = express.Router();
 const pool = require("../db");
+const { buildFilterClause } = require("../utils/listingFilters");
 
-//GET /api/properties which returns paginate and filtered property listings
+const BUCKET_COUNT = 28;
+
+//GET /api/properties which returns paginated and filtered property listings
 listingsRouter.get("/", async (req, res) => {
   try {
     const pageSize = req.query.limit !== undefined ? Number(req.query.limit) : 20;
@@ -23,56 +26,26 @@ listingsRouter.get("/", async (req, res) => {
     const numericFilters = ["minPrice", "maxPrice", "beds", "baths"];
     for (const field of numericFilters) {
       if (req.query[field] !== undefined && isNaN(Number(req.query[field]))) {
-        return res
-          .status(400)
-          .json({ error: `${field} must be a number` });
+        return res.status(400).json({ error: `${field} must be a number` });
       }
     }
 
-    //build WHERE clause piece by piece from whichever filters are present
-    const filters = [];
-    const filterValues = [];
-
-    if (req.query.city) {
-      filters.push("LOWER(TRIM(L_City)) = LOWER(TRIM(?))");
-      filterValues.push(req.query.city);
-    }
-    if (req.query.zipcode) {
-      filters.push("L_Zip = ?");
-      filterValues.push(req.query.zipcode);
-    }
-    if (req.query.minPrice) {
-      filters.push("L_SystemPrice >= ?");
-      filterValues.push(Number(req.query.minPrice));
-    }
-    if (req.query.maxPrice) {
-      filters.push("L_SystemPrice <= ?");
-      filterValues.push(Number(req.query.maxPrice));
-    }
-    if (req.query.beds) {
-      filters.push("L_Keyword2 = ?");
-      filterValues.push(Number(req.query.beds));
-    }
-    if (req.query.baths) {
-      filters.push("LM_Dec_3 = ?");
-      filterValues.push(Number(req.query.baths));
-    }
-
-    //only add WHERE keyword if at least one filter exists
+    //build WHERE clause from whichever filters are present
+    const { conditions, values } = buildFilterClause(req.query);
     const whereClause =
-      filters.length > 0 ? "WHERE " + filters.join(" AND ") : "";
+      conditions.length > 0 ? "WHERE " + conditions.join(" AND ") : "";
 
     //count query, total matches for these filters (ignores pagination)
     const [countResult] = await pool.query(
       `SELECT COUNT(*) AS total FROM rets_property ${whereClause}`,
-      filterValues
+      values
     );
     const total = countResult[0].total;
 
     //page query, the current page of matching rows
     const [rows] = await pool.query(
       `SELECT * FROM rets_property ${whereClause} LIMIT ? OFFSET ?`,
-      [...filterValues, pageSize, skip]
+      [...values, pageSize, skip]
     );
 
     res.json({
@@ -83,6 +56,76 @@ listingsRouter.get("/", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch listings" });
+  }
+});
+
+//GET /api/properties/price-distribution — price histogram for current non-price filters
+//must be registered BEFORE /:id, or Express matches /:id greedily
+listingsRouter.get("/price-distribution", async (req, res) => {
+  try {
+    const { conditions, values } = buildFilterClause(req.query, {
+      includePrice: false,
+    });
+    const where =
+      "WHERE " + [...conditions, "L_SystemPrice > 0"].join(" AND ");
+
+    //cap at the 95th percentile so a single outlier does not flatten the chart
+    const [boundsRows] = await pool.query(
+      `WITH ranked AS (
+         SELECT L_SystemPrice AS p,
+                PERCENT_RANK() OVER (ORDER BY L_SystemPrice) AS pr
+         FROM rets_property ${where}
+       )
+       SELECT MIN(p) AS low,
+              MAX(CASE WHEN pr <= 0.95 THEN p END) AS ceiling,
+              MAX(p) AS high,
+              COUNT(*) AS n
+       FROM ranked`,
+      values
+    );
+
+    const bounds = boundsRows[0];
+
+    if (!bounds || !bounds.n) {
+      return res.json({
+        low: 0,
+        high: 0,
+        bucketSize: 0,
+        buckets: [],
+        capped: false,
+      });
+    }
+
+    const low = Number(bounds.low);
+    const ceiling = Number(bounds.ceiling ?? bounds.high);
+    const high = Number(bounds.high);
+    const span = Math.max(ceiling - low, 1);
+    const bucketSize = Math.ceil(span / BUCKET_COUNT);
+
+    const [bucketRows] = await pool.query(
+      `SELECT LEAST(FLOOR((L_SystemPrice - ?) / ?), ?) AS idx, COUNT(*) AS n
+       FROM rets_property ${where}
+       GROUP BY idx
+       ORDER BY idx`,
+      [low, bucketSize, BUCKET_COUNT - 1, ...values]
+    );
+
+    const counts = new Array(BUCKET_COUNT).fill(0);
+    bucketRows.forEach((row) => {
+      const i = Number(row.idx);
+      if (i >= 0 && i < BUCKET_COUNT) counts[i] = Number(row.n);
+    });
+
+    res.json({
+      low,
+      high: low + bucketSize * BUCKET_COUNT,
+      trueHigh: high,
+      capped: ceiling < high,
+      bucketSize,
+      buckets: counts,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to build price distribution" });
   }
 });
 

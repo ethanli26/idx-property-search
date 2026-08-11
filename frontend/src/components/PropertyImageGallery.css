@@ -1,0 +1,227 @@
+.gallery {
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.gallery__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 3 / 2;
+  background: #E3DED4;
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9B958A;
+}
+
+.gallery__stage {
+  position: relative;
+}
+
+.gallery__main {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border: none;
+  background: #E3DED4;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+/* the same affordance the listing cards use: the arrows surface on hover, so
+   the photo reads as browsable without the chrome sitting there permanently */
+.gallery__stage-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-family: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #16202E;
+  background: rgba(251, 250, 247, 0.94);
+  border: 1px solid #DFD9CF;
+  border-radius: 50%;
+  padding: 0 0 3px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.gallery__stage:hover .gallery__stage-arrow,
+.gallery__stage-arrow:focus-visible {
+  opacity: 1;
+}
+
+.gallery__stage-arrow:hover {
+  background: #FBFAF7;
+}
+
+.gallery__stage-arrow--prev {
+  left: 14px;
+}
+
+.gallery__stage-arrow--next {
+  right: 14px;
+}
+
+/* touch devices have no hover, so the arrows stay visible there */
+@media (hover: none) {
+  .gallery__stage-arrow {
+    opacity: 1;
+  }
+}
+
+.gallery__main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery__counter {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-size: 0.656rem;
+  letter-spacing: 0.1em;
+  color: #F2EFE9;
+  background: rgba(22, 32, 46, 0.72);
+  padding: 4px 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the strip scrolls sideways rather than wrapping, so the main image keeps its
+   position on the page no matter how many photos a listing carries */
+.gallery__thumbs {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.gallery__thumb {
+  flex: none;
+  width: 84px;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 1px solid transparent;
+  background: #E3DED4;
+  cursor: pointer;
+  opacity: 0.62;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+  overflow: hidden;
+}
+
+.gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery__thumb:hover {
+  opacity: 1;
+}
+
+.gallery__thumb--current {
+  opacity: 1;
+  border-color: #16202E;
+}
+
+.gallery__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 44px;
+  background: rgba(13, 21, 32, 0.94);
+  cursor: zoom-out;
+}
+
+.gallery__lightbox:focus {
+  outline: none;
+}
+
+.gallery__full {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: default;
+}
+
+.gallery__close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-family: inherit;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: #F2EFE9;
+  background: none;
+  border: none;
+  padding: 4px 10px;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
+}
+
+.gallery__close:hover {
+  opacity: 1;
+}
+
+.gallery__nav {
+  flex: none;
+  font-family: inherit;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: #F2EFE9;
+  background: none;
+  border: 1px solid rgba(242, 239, 233, 0.32);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  padding: 0 0 5px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.gallery__nav:hover {
+  border-color: #F2EFE9;
+  background: rgba(242, 239, 233, 0.1);
+}
+
+.gallery__lightbox-counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.688rem;
+  letter-spacing: 0.14em;
+  color: #C9C2B6;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .gallery__lightbox {
+    padding: 20px;
+    gap: 8px;
+  }
+
+  .gallery__nav {
+    width: 34px;
+    height: 34px;
+    font-size: 1.4rem;
+  }
+}

@@ -70,12 +70,20 @@ function ListingsPage() {
   const firstShown = (currentPage - 1) * itemsPerPage + 1;
   const lastShown = firstShown + listings.length - 1;
 
+  const hasResults = listings.length > 0;
+
+  //the first load has nothing on screen yet, so it earns skeletons. A page change
+  //already has a grid the user is looking at — replacing it with placeholders
+  //reads as a much longer wait than dimming what is already there.
+  const showSkeletons = isFetching && !hasResults;
+  const isRefreshing = isFetching && hasResults;
+
   let statusLabel;
-  if (isFetching) {
+  if (showSkeletons) {
     statusLabel = "Loading";
   } else if (failure) {
     statusLabel = "Unavailable";
-  } else if (matchCount === 0) {
+  } else if (!hasResults) {
     statusLabel = "No properties";
   } else {
     statusLabel = `Showing ${firstShown}-${lastShown} of ${matchCount.toLocaleString()} properties`;
@@ -85,7 +93,15 @@ function ListingsPage() {
     <main className="listings">
       <header className="listings__header">
         <h1 className="listings__title">Properties</h1>
-        <p className="listings__count">{statusLabel}</p>
+        <p
+          className={
+            isRefreshing
+              ? "listings__count listings__count--busy"
+              : "listings__count"
+          }
+        >
+          {statusLabel}
+        </p>
       </header>
       <div className="listings__rule" />
 
@@ -102,7 +118,7 @@ function ListingsPage() {
         </div>
       )}
 
-      {isFetching && (
+      {showSkeletons && (
         <div className="listings__grid">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className="listings__skeleton" />
@@ -110,7 +126,7 @@ function ListingsPage() {
         </div>
       )}
 
-      {!isFetching && !failure && listings.length === 0 && (
+      {!isFetching && !failure && !hasResults && (
         <div className="listings__notice">
           <p className="listings__notice-title">No properties found</p>
           <p className="listings__notice-body">
@@ -119,15 +135,20 @@ function ListingsPage() {
         </div>
       )}
 
-      {!isFetching && !failure && listings.length > 0 && (
-        <div className="listings__grid">
+      {!failure && hasResults && (
+        <div
+          className={
+            isRefreshing ? "listings__grid listings__grid--busy" : "listings__grid"
+          }
+          aria-busy={isRefreshing || undefined}
+        >
           {listings.map((listing) => (
             <PropertyCard key={listing.L_ListingID} listing={listing} />
           ))}
         </div>
       )}
 
-      {!isFetching && !failure && listings.length > 0 && (
+      {!failure && hasResults && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

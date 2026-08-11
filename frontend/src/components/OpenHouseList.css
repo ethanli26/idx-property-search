@@ -1,0 +1,59 @@
+.open-houses {
+  margin-top: 34px;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.open-houses__title {
+  margin: 0 0 12px;
+  font-size: 0.688rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #16202E;
+}
+
+.open-houses__empty {
+  margin: 0;
+  font-size: 0.781rem;
+  font-weight: 300;
+  color: #8A8378;
+}
+
+.open-houses__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.open-houses__item {
+  border: 1px solid #DFD9CF;
+  border-left: 2px solid #A8894F;
+  background: #FBFAF7;
+  padding: 12px 14px;
+}
+
+.open-houses__date {
+  margin: 0;
+  font-size: 0.813rem;
+  color: #16202E;
+}
+
+.open-houses__time {
+  margin: 3px 0 0;
+  font-size: 0.688rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8A8378;
+  font-variant-numeric: tabular-nums;
+}
+
+.open-houses__remarks {
+  margin: 8px 0 0;
+  font-size: 0.781rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: #5A554B;
+}

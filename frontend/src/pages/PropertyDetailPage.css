@@ -1,0 +1,176 @@
+.detail {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 28px 96px;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.detail__back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.detail__back::before {
+  content: "\2190";
+  margin-right: 7px;
+}
+
+.detail__back:hover {
+  color: #16202E;
+}
+
+.detail__skeleton {
+  aspect-ratio: 3 / 2;
+  background: #E3DED4;
+}
+
+.detail__notice {
+  border: 1px solid #16202E;
+  padding: 34px 24px;
+  text-align: center;
+}
+
+.detail__notice-title {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #16202E;
+}
+
+.detail__notice-body {
+  margin: 0;
+  font-size: 0.781rem;
+  font-weight: 300;
+  color: #8A8378;
+}
+
+.detail__header {
+  margin-top: 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #D6D0C5;
+}
+
+.detail__price {
+  margin: 0 0 6px;
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #16202E;
+}
+
+.detail__address {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #2B3446;
+}
+
+.detail__region {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+}
+
+/* the headline numbers, sized to be read at a glance rather than parsed */
+.detail__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 34px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail__stat-value {
+  font-size: 1.19rem;
+  color: #16202E;
+  font-variant-numeric: tabular-nums;
+}
+
+.detail__stat-label {
+  font-size: 0.594rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+}
+
+.detail__section {
+  margin-top: 34px;
+}
+
+.detail__section-title {
+  margin: 0 0 12px;
+  font-size: 0.688rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #16202E;
+}
+
+.detail__description {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: #3D4653;
+  white-space: pre-line;
+}
+
+/* Each fact stacks its label over its value. Side-by-side rows in a multi-column
+   grid push the value hard right, where it collides with the next column's
+   label and reads as one run-on string. */
+.detail__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 2px 32px;
+  margin: 0;
+}
+
+.detail__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 0;
+  border-bottom: 1px solid #E9E4DA;
+  min-width: 0;
+}
+
+.detail__fact-label {
+  font-size: 0.594rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8A8378;
+}
+
+.detail__fact-value {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #16202E;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .detail {
+    padding: 28px 18px 72px;
+  }
+
+  .detail__stats {
+    gap: 22px;
+  }
+}
