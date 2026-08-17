@@ -1,0 +1,43 @@
+.favorite {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: #16202E;
+  background: rgba(251, 250, 247, 0.92);
+  border: 1px solid #DFD9CF;
+  border-radius: 50%;
+  padding: 0 0 1px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.favorite:hover {
+  background: #FBFAF7;
+  transform: scale(1.08);
+}
+
+/* saved state carries colour, so the list reads at a glance without hovering */
+.favorite--on {
+  color: #A8894F;
+  border-color: #A8894F;
+}
+
+.favorite:focus-visible {
+  outline: 2px solid #A8894F;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .favorite:hover {
+    transform: none;
+  }
+}

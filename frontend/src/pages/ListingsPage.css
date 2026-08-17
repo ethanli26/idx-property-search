@@ -21,6 +21,28 @@
   color: #16202E;
 }
 
+.listings__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+/* the saved count lives beside the result count, so both readings of "how many"
+   sit in the same place */
+.listings__favorites {
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.listings__favorites:hover {
+  color: #A8894F;
+}
+
 .listings__count {
   margin: 0;
   font-size: 0.625rem;
@@ -45,6 +67,14 @@
   width: 56px;
   height: 1px;
   background: #A8894F;
+}
+
+/* the sort sits on its own row above the grid, aligned right so it reads as
+   acting on the results below rather than as another filter */
+.listings__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
 }
 
 .listings__grid {

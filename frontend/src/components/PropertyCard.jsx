@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { readPhotoUrls } from "../utils/photoData";
 import PropertyImageCarousel from "./PropertyImageCarousel";
+import FavoriteButton from "./FavoriteButton";
 import "./PropertyCard.css";
 
 function displayPrice(amount) {
@@ -39,6 +40,7 @@ function PropertyCard({ listing }) {
             photos={photos}
             alt={listing.L_Address || "Property"}
           />
+          <FavoriteButton listingId={listing.L_ListingID} />
         </div>
 
         <div className="listing-card__body">

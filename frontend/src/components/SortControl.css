@@ -1,0 +1,41 @@
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.sort__label {
+  font-size: 0.594rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+}
+
+/* matches the filter inputs, so the row reads as one family of controls */
+.sort__select {
+  font-family: inherit;
+  font-size: 0.813rem;
+  font-weight: 400;
+  color: #16202E;
+  background: #FBFAF7;
+  border: 1px solid #DFD9CF;
+  border-radius: 0;
+  padding: 7px 9px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.sort__select:hover:not(:disabled) {
+  border-color: #C9C2B6;
+}
+
+.sort__select:focus {
+  border-color: #16202E;
+}
+
+.sort__select:disabled {
+  color: #B5AEA2;
+  cursor: default;
+}

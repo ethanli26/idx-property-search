@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ListingsPage from "./ListingsPage";
 import { loadListings } from "../services/listingsApi";
@@ -158,5 +164,64 @@ describe("ListingsPage pagination", () => {
     expect(loadListings).toHaveBeenLastCalledWith(
       expect.objectContaining({ city: "Austin", offset: 0 })
     );
+  });
+});
+
+describe("ListingsPage sorting", () => {
+  test("carries the sort onto the next page", async () => {
+    loadListings.mockImplementation(pagedSource(45));
+
+    renderListings();
+    await screen.findByText("Address 1");
+
+    fireEvent.change(screen.getByLabelText("Sort"), {
+      target: { value: "price-desc" },
+    });
+    await waitFor(() =>
+      expect(loadListings).toHaveBeenLastCalledWith(
+        expect.objectContaining({ sortBy: "price", sortOrder: "desc" })
+      )
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Page 2" }));
+    await screen.findByText("Address 21");
+
+    //the ordering is the user's choice about these results, so paging keeps it
+    expect(loadListings).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        sortBy: "price",
+        sortOrder: "desc",
+        offset: 20,
+      })
+    );
+  });
+
+  test("drops the sort when new filters are applied", async () => {
+    loadListings.mockImplementation(pagedSource(45));
+
+    renderListings();
+    await screen.findByText("Address 1");
+
+    fireEvent.change(screen.getByLabelText("Sort"), {
+      target: { value: "price-desc" },
+    });
+    await waitFor(() =>
+      expect(loadListings).toHaveBeenLastCalledWith(
+        expect.objectContaining({ sortBy: "price" })
+      )
+    );
+
+    fireEvent.change(screen.getByLabelText("City"), {
+      target: { value: "Austin" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+
+    //a different result set, so the previous ordering no longer applies
+    await waitFor(() =>
+      expect(loadListings).toHaveBeenLastCalledWith(
+        expect.objectContaining({ city: "Austin", sortBy: "", offset: 0 })
+      )
+    );
+    expect(screen.getByLabelText("Sort")).toHaveValue("");
   });
 });

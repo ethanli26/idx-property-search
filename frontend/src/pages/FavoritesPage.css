@@ -1,0 +1,128 @@
+.favorites {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 48px 28px 96px;
+  font-family: "Jost", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.favorites__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 9px;
+}
+
+.favorites__title {
+  margin: 0;
+  font-size: 1.19rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #16202E;
+}
+
+.favorites__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.favorites__back,
+.favorites__clear {
+  font-family: inherit;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.favorites__back:hover,
+.favorites__clear:hover {
+  color: #16202E;
+}
+
+.favorites__count {
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8378;
+  font-variant-numeric: tabular-nums;
+}
+
+.favorites__rule {
+  height: 1px;
+  background: #D6D0C5;
+  position: relative;
+  margin-bottom: 26px;
+}
+
+.favorites__rule::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 56px;
+  height: 1px;
+  background: #A8894F;
+}
+
+.favorites__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 22px 16px;
+}
+
+.favorites__skeleton {
+  aspect-ratio: 4 / 3.4;
+  background: #E3DED4;
+}
+
+.favorites__notice {
+  border: 1px solid #DFD9CF;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.favorites__notice-title {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #16202E;
+}
+
+.favorites__notice-body {
+  margin: 0 auto;
+  max-width: 380px;
+  font-size: 0.781rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #8A8378;
+}
+
+.favorites__browse {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #F2EFE9;
+  background: #16202E;
+  border: 1px solid #16202E;
+  padding: 10px 20px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.favorites__browse:hover {
+  background: #0D1520;
+}

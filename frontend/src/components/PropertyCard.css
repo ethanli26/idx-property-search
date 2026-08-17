@@ -33,7 +33,9 @@
   outline-offset: -2px;
 }
 
+/* anchors the favourite button, which overlays the photo */
 .listing-card__image {
+  position: relative;
   aspect-ratio: 4 / 3;
   background: #E3DED4;
 }

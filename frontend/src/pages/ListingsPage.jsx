@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { loadListings } from "../services/listingsApi";
+import { useFavorites } from "../hooks/useFavorites";
 import PropertyCard from "../components/PropertyCard";
 import PropertyFilters from "../components/PropertyFilters";
 import Pagination from "../components/Pagination";
+import SortControl, { toSortParams } from "../components/SortControl";
 import "./ListingsPage.css";
 
 const PAGE_SIZE = 20;
@@ -15,6 +18,8 @@ function ListingsPage() {
   const [activeFilters, setActiveFilters] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(PAGE_SIZE);
+  const [sort, setSort] = useState("");
+  const { count: favoriteCount } = useFavorites();
 
   useEffect(() => {
     let active = true;
@@ -26,6 +31,7 @@ function ListingsPage() {
       try {
         const payload = await loadListings({
           ...activeFilters,
+          ...toSortParams(sort),
           limit: itemsPerPage,
           offset: (currentPage - 1) * itemsPerPage,
         });
@@ -46,24 +52,34 @@ function ListingsPage() {
     return () => {
       active = false;
     };
-  }, [activeFilters, currentPage, itemsPerPage]);
+  }, [activeFilters, currentPage, itemsPerPage, sort]);
 
   //a new filter set describes a different result set, so the old page number
-  //no longer means anything and the user goes back to the start of it
+  //no longer means anything and the user goes back to the start of it. The sort
+  //goes with it: the ordering was a choice about the previous results.
   const handleSearch = useCallback((submitted) => {
     setActiveFilters(submitted);
     setCurrentPage(1);
+    setSort("");
   }, []);
 
   const handleClear = useCallback(() => {
     setActiveFilters({});
     setCurrentPage(1);
+    setSort("");
   }, []);
 
-  //only the page moves here, so whatever filters are active carry over untouched
+  //only the page moves here, so filters and sort both carry over untouched
   const handlePageChange = useCallback((nextPage) => {
     setCurrentPage(nextPage);
     window.scrollTo(0, 0);
+  }, []);
+
+  //a new ordering rebuilds the whole sequence, so page 3 of the old order has
+  //no counterpart in the new one
+  const handleSortChange = useCallback((nextSort) => {
+    setSort(nextSort);
+    setCurrentPage(1);
   }, []);
 
   const totalPages = Math.ceil(matchCount / itemsPerPage);
@@ -93,15 +109,20 @@ function ListingsPage() {
     <main className="listings">
       <header className="listings__header">
         <h1 className="listings__title">Properties</h1>
-        <p
-          className={
-            isRefreshing
-              ? "listings__count listings__count--busy"
-              : "listings__count"
-          }
-        >
-          {statusLabel}
-        </p>
+        <div className="listings__meta">
+          <Link className="listings__favorites" to="/favorites">
+            Favorites{favoriteCount > 0 ? ` (${favoriteCount})` : ""}
+          </Link>
+          <p
+            className={
+              isRefreshing
+                ? "listings__count listings__count--busy"
+                : "listings__count"
+            }
+          >
+            {statusLabel}
+          </p>
+        </div>
       </header>
       <div className="listings__rule" />
 
@@ -110,6 +131,16 @@ function ListingsPage() {
         onClear={handleClear}
         busy={isFetching}
       />
+
+      {!failure && (hasResults || isFetching) && (
+        <div className="listings__toolbar">
+          <SortControl
+            value={sort}
+            onChange={handleSortChange}
+            disabled={showSkeletons}
+          />
+        </div>
+      )}
 
       {failure && (
         <div className="listings__notice listings__notice--error">
