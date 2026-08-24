@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+import { openHouseShape } from "../utils/propTypes";
 import {
   readOpenHouseRemarks,
   formatOpenHouseDate,
@@ -37,5 +39,9 @@ function OpenHouseList({ openHouses }) {
     </section>
   );
 }
+
+OpenHouseList.propTypes = {
+  openHouses: PropTypes.arrayOf(openHouseShape),
+};
 
 export default OpenHouseList;

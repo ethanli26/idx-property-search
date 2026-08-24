@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import "./PropertyImageGallery.css";
 
 function PropertyImageGallery({ photos, alt }) {
@@ -161,5 +162,10 @@ function PropertyImageGallery({ photos, alt }) {
     </div>
   );
 }
+
+PropertyImageGallery.propTypes = {
+  photos: PropTypes.arrayOf(PropTypes.string),
+  alt: PropTypes.string,
+};
 
 export default PropertyImageGallery;
