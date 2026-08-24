@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { listingShape } from "../utils/propTypes";
 import { readPhotoUrls } from "../utils/photoData";
 import PropertyImageCarousel from "./PropertyImageCarousel";
 import FavoriteButton from "./FavoriteButton";
@@ -59,5 +60,9 @@ function PropertyCard({ listing }) {
     </article>
   );
 }
+
+PropertyCard.propTypes = {
+  listing: listingShape.isRequired,
+};
 
 export default PropertyCard;

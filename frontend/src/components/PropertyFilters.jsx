@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import "./PropertyFilters.css";
 import PriceBand from "./PriceBand";
 
@@ -107,5 +108,11 @@ function PropertyFilters({ onSearch, onClear, busy }) {
     </form>
   );
 }
+
+PropertyFilters.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
+  busy: PropTypes.bool,
+};
 
 export default PropertyFilters;
