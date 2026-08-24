@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { loadListings } from "../services/listingsApi";
+import { loadListings } from "../api/listingsApi";
 import { useFavorites } from "../hooks/useFavorites";
 import PropertyCard from "../components/PropertyCard";
 import PropertyFilters from "../components/PropertyFilters";
