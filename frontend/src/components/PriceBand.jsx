@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { loadPriceDistribution } from "../services/listingsApi";
+import { loadPriceDistribution } from "../api/listingsApi";
 import "./PriceBand.css";
 
 function abbreviate(value) {

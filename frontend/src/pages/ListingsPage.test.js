@@ -7,12 +7,12 @@ import {
 } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ListingsPage from "./ListingsPage";
-import { loadListings } from "../services/listingsApi";
+import { loadListings } from "../api/listingsApi";
 
 //the page is the unit here, so the API module is replaced wholesale.
 //loadPriceDistribution is stubbed because PriceBand imports it, even though
 //the collapsed panel does not call it until it is opened.
-jest.mock("../services/listingsApi", () => ({
+jest.mock("../api/listingsApi", () => ({
   loadListings: jest.fn(),
   loadPriceDistribution: jest.fn(),
 }));
