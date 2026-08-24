@@ -20,3 +20,6 @@ dist/
 
 #company provided data
 *.sql
+
+#...but our own migrations are source, not data
+!backend/sql/*.sql
