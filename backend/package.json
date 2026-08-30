@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "test": "jest",
+    "dev": "nodemon index.js",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +19,8 @@
     "mysql2": "^3.22.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "jest": "^30.5.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
   }
 }
