@@ -9,6 +9,9 @@ node_modules/
 build/
 dist/
 
+#test coverage reports
+coverage/
+
 #logs
 *.log
 
