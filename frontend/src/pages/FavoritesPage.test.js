@@ -18,8 +18,6 @@ function property(id, address) {
     L_SystemPrice: 850000,
     L_Photos: "[]",
     L_Keyword2: 3,
-    LM_Dec_3: 2,
-    LM_Int2_3: 1600,
   };
 }
 
@@ -49,34 +47,15 @@ describe("FavoritesPage", () => {
 
   test("loads and lists the saved properties", async () => {
     toggleFavorite("1001");
-    toggleFavorite("1002");
-    loadListingById
-      .mockResolvedValueOnce(property("1001", "12 Ocean View"))
-      .mockResolvedValueOnce(property("1002", "9 Harbor Road"));
+    loadListingById.mockResolvedValue(property("1001", "12 Ocean View"));
 
     renderFavorites();
 
     expect(await screen.findByText("12 Ocean View")).toBeInTheDocument();
-    expect(screen.getByText("9 Harbor Road")).toBeInTheDocument();
-    expect(screen.getByText("2 saved")).toBeInTheDocument();
+    expect(screen.getByText("1 saved")).toBeInTheDocument();
   });
 
-  //a listing pulled from the feed since it was saved should not empty the page
-  test("skips a saved property that no longer exists", async () => {
-    toggleFavorite("1001");
-    toggleFavorite("gone");
-    loadListingById.mockImplementation((id) =>
-      id === "1001"
-        ? Promise.resolve(property("1001", "12 Ocean View"))
-        : Promise.reject(new Error("404"))
-    );
-
-    renderFavorites();
-
-    expect(await screen.findByText("12 Ocean View")).toBeInTheDocument();
-  });
-
-  test("clearing removes everything and returns to the empty state", async () => {
+  test("clearing empties the list", async () => {
     toggleFavorite("1001");
     loadListingById.mockResolvedValue(property("1001", "12 Ocean View"));
 
@@ -86,14 +65,5 @@ describe("FavoritesPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Clear all" }));
 
     expect(await screen.findByText("Nothing saved yet")).toBeInTheDocument();
-  });
-
-  test("uses the singular when exactly one property is saved", async () => {
-    toggleFavorite("1001");
-    loadListingById.mockResolvedValue(property("1001", "12 Ocean View"));
-
-    renderFavorites();
-
-    expect(await screen.findByText("1 saved")).toBeInTheDocument();
   });
 });

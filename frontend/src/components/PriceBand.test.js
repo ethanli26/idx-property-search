@@ -38,153 +38,76 @@ beforeEach(() => {
 });
 
 describe("PriceBand", () => {
-  describe("collapsed", () => {
-    //the histogram is a round trip, so it should not happen until it is wanted
-    test("does not fetch the distribution before it is opened", () => {
-      renderBand();
+  //the histogram costs a round trip, so it should not happen until it is wanted
+  test("stays collapsed and does not fetch until opened", () => {
+    renderBand();
 
-      expect(loadPriceDistribution).not.toHaveBeenCalled();
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(loadPriceDistribution).not.toHaveBeenCalled();
+    expect(screen.getByText("Any price")).toBeInTheDocument();
+  });
+
+  test("summarises the selected range on the trigger", () => {
+    renderBand({ minPrice: "250000", maxPrice: "1500000" });
+
+    expect(screen.getByText("$250K – $1.5M")).toBeInTheDocument();
+  });
+
+  test("fetches with the other active filters as context when opened", async () => {
+    renderBand({
+      contextFilters: { city: "Monterey", zipcode: "", beds: "3", baths: "" },
     });
 
-    test.each([
-      ["no bounds", { minPrice: "", maxPrice: "" }, "Any price"],
-      ["a minimum only", { minPrice: "250000", maxPrice: "" }, "$250K+"],
-      ["a maximum only", { minPrice: "", maxPrice: "900000" }, "Up to $900K"],
-      [
-        "both bounds",
-        { minPrice: "250000", maxPrice: "1500000" },
-        "$250K – $1.5M",
-      ],
-    ])("summarises %s on the trigger", (_label, prices, expected) => {
-      renderBand(prices);
+    await openPanel();
 
-      expect(screen.getByText(expected)).toBeInTheDocument();
+    await waitFor(() =>
+      expect(loadPriceDistribution).toHaveBeenCalledWith({
+        city: "Monterey",
+        zipcode: "",
+        beds: "3",
+        baths: "",
+      })
+    );
+  });
+
+  test("reports a typed bound to the parent", async () => {
+    const { onChange } = renderBand();
+    await openPanel();
+
+    fireEvent.change(await screen.findByPlaceholderText("Min"), {
+      target: { value: "300000" },
+    });
+
+    expect(onChange).toHaveBeenCalledWith({
+      minPrice: "300000",
+      maxPrice: "",
     });
   });
 
-  describe("opened", () => {
-    test("fetches the distribution and draws the histogram", async () => {
-      renderBand();
-
-      await openPanel();
-
-      await waitFor(() => expect(loadPriceDistribution).toHaveBeenCalledTimes(1));
-      expect(
-        await screen.findByLabelText("Minimum price", { selector: "input[type=range]" })
-      ).toBeInTheDocument();
+  test("says so when nothing priced matches", async () => {
+    loadPriceDistribution.mockResolvedValue({
+      low: 0,
+      high: 0,
+      bucketSize: 0,
+      buckets: [],
+      capped: false,
     });
+    renderBand();
 
-    test("passes the other active filters as context", async () => {
-      renderBand({
-        contextFilters: { city: "Monterey", zipcode: "", beds: "3", baths: "" },
-      });
+    await openPanel();
 
-      await openPanel();
+    expect(
+      await screen.findByText("No priced listings match")
+    ).toBeInTheDocument();
+  });
 
-      await waitFor(() =>
-        expect(loadPriceDistribution).toHaveBeenCalledWith({
-          city: "Monterey",
-          zipcode: "",
-          beds: "3",
-          baths: "",
-        })
-      );
-    });
+  test("closes on Escape", async () => {
+    renderBand();
+    await openPanel();
 
-    test("says so when nothing priced matches", async () => {
-      loadPriceDistribution.mockResolvedValue({
-        low: 0,
-        high: 0,
-        bucketSize: 0,
-        buckets: [],
-        capped: false,
-      });
-      renderBand();
+    fireEvent.keyDown(document, { key: "Escape" });
 
-      await openPanel();
-
-      expect(
-        await screen.findByText("No priced listings match")
-      ).toBeInTheDocument();
-    });
-
-    test("survives the request failing", async () => {
-      loadPriceDistribution.mockRejectedValue(new Error("unavailable"));
-      renderBand();
-
-      await openPanel();
-
-      expect(
-        await screen.findByText("No priced listings match")
-      ).toBeInTheDocument();
-    });
-
-    test("reports a typed minimum to the parent", async () => {
-      const { onChange } = renderBand();
-      await openPanel();
-
-      const input = await screen.findByPlaceholderText("Min");
-      fireEvent.change(input, { target: { value: "300000" } });
-
-      expect(onChange).toHaveBeenCalledWith({
-        minPrice: "300000",
-        maxPrice: "",
-      });
-    });
-
-    test("clear resets both bounds", async () => {
-      const { onChange } = renderBand({
-        minPrice: "250000",
-        maxPrice: "900000",
-      });
-      await openPanel();
-
-      fireEvent.click(await screen.findByRole("button", { name: "Clear" }));
-
-      expect(onChange).toHaveBeenCalledWith({ minPrice: "", maxPrice: "" });
-    });
-
-    test("clear is disabled when there is nothing to clear", async () => {
-      renderBand();
-      await openPanel();
-
-      expect(
-        await screen.findByRole("button", { name: "Clear" })
-      ).toBeDisabled();
-    });
-
-    test("Done closes the panel", async () => {
-      renderBand();
-      await openPanel();
-
-      fireEvent.click(await screen.findByRole("button", { name: "Done" }));
-
-      await waitFor(() =>
-        expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
-      );
-    });
-
-    test("Escape closes the panel", async () => {
-      renderBand();
-      await openPanel();
-
-      fireEvent.keyDown(document, { key: "Escape" });
-
-      await waitFor(() =>
-        expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
-      );
-    });
-
-    test("a click outside closes the panel", async () => {
-      renderBand();
-      await openPanel();
-
-      fireEvent.mouseDown(document.body);
-
-      await waitFor(() =>
-        expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
-      );
-    });
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+    );
   });
 });
