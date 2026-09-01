@@ -9,7 +9,7 @@ Node/Express + MySQL on the backend, React on the frontend.
 > **Status:** still in progress. Most of it works; see Known issues at the bottom
 > for what's rough.
 
-<!-- TODO: screenshot of the listings page -->
+![Listings page](docs/screenshot.png)
 
 ## Team
 
