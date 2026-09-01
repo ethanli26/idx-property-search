@@ -6,9 +6,53 @@ open house times.
 
 Node/Express + MySQL on the backend, React on the frontend.
 
+> **Status:** still in progress. Most of it works; see Known issues at the bottom
+> for what's rough.
+
+<!-- TODO: screenshot of the listings page -->
+
 ## Team
 
 Ana Clara · Shuwen Wen · Janie Tran · Westin Mathies · Ethan Li · Jenny Huynh
+
+## Features
+
+**Search and filtering** — filter by city, ZIP, price range, beds, and baths.
+The price filter has a histogram showing where listings actually cluster, so you
+can see the shape of the market before picking a range.
+
+**Sorting** — price, date listed, square footage, or bed count. The sort sticks
+when you change pages and resets when you change filters, since a new filter set
+is a different list.
+
+**Pagination** — 20 per page, done on the server so the browser never holds more
+than a page. Page numbers collapse with an ellipsis on long result sets.
+
+**Property detail page** — photos with a thumbnail strip and a full-screen
+lightbox, a Google map, price and stats, description, and open house times.
+
+**Favorites** — save properties with the heart on any card. Saved to the browser,
+so they survive a refresh. There's a separate page listing them.
+
+**Photo carousel on cards** — flip through a listing's photos without leaving the
+results page.
+
+## Tech stack
+
+| | |
+|---|---|
+| Node | 24.x (18+ works) |
+| Express | 5.2 |
+| MySQL | 8.x — needs window function support |
+| mysql2 | 3.22 |
+| React | 19.2 |
+| React Router | 6.30 |
+| Create React App | 5.0.1 |
+| Jest + Supertest | backend tests |
+| Jest + React Testing Library | frontend tests |
+
+No CSS framework, no component library, no state management library. Plain CSS
+and React state.
 
 ## Setup
 
@@ -146,6 +190,19 @@ Work goes on a feature branch off `develop`, then merges back. Nothing commits
 straight to `main`. Commit messages use `type(scope): description` — types are
 feat, fix, refactor, test, docs, chore.
 
+## Testing
+
+```bash
+cd backend  && npm test           # 16 tests
+cd frontend && CI=true npm test   # 54 tests
+```
+
+Coverage sits around 88% on the backend routes and 84% on the frontend. Add
+`npm run test:coverage` on the backend for the full report.
+
+The backend tests mock the database connection, so they run in under a second
+and work with MySQL turned off.
+
 ## Known issues
 
 The feed data is messy and the app works around it:
@@ -153,12 +210,27 @@ The feed data is messy and the app works around it:
 - Some listings have no photos, or photo data that isn't valid JSON
 - Price, beds, and baths can be null
 - Missing lat/lng on some properties, so the map only renders when both exist
-- Only about 1% of listings have open houses
+- Only about 1% of listings have open houses, so most detail pages show none
 
-Other things worth knowing:
+Things we know aren't great yet:
 
-- Favorites are stored in localStorage, so they're per browser, not per account
-- The favorites page fetches each saved property separately. Fine for a handful,
-  slow for a lot — a batch endpoint would fix it
-- Going back from a detail page returns to page 1 with filters cleared, since
-  filter state lives in React and not the URL
+- **Filters don't live in the URL.** Going back from a detail page dumps you on
+  page 1 with filters cleared, and you can't share a filtered search. Moving
+  filter state into query params would fix both.
+- **The favorites page fetches one property at a time.** Fine for five, slow for
+  fifty. Needs a batch endpoint.
+- **Favorites are per browser.** They're in localStorage, so they don't follow
+  you to another device. Real accounts would.
+- **No loading state on the detail page images.** Large photos pop in.
+- **The composite indexes in `backend/sql/` aren't applied by default.** You have
+  to run the migration yourself.
+
+## Future improvements
+
+Roughly in the order we'd do them:
+
+1. Filter state in the URL, so searches are shareable and the back button works
+2. A batch endpoint so favorites load in one request
+3. Map pins on the listings page, not just the detail page
+4. Saved searches with email alerts
+5. Deploy it somewhere — currently local only
