@@ -11,6 +11,10 @@ Node/Express + MySQL on the backend, React on the frontend.
 
 ![Listings page](docs/screenshot.png)
 
+## Demo
+
+[![Property search demo video](https://img.youtube.com/vi/JATZc_z2JLU/0.jpg)](https://www.youtube.com/watch?v=JATZc_z2JLU)
+
 ## Team
 
 Ana Clara · Shuwen Wen · Janie Tran · Westin Mathies · Ethan Li · Jenny Huynh
