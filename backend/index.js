@@ -1,27 +1,9 @@
-const express = require("express");
-const cors = require("cors");
-const listingsRouter = require("./routes/listings")
-const requestLog = require("./middleware/requestLog");
 require("dotenv").config();
-const pool = require("./db");
+const app = require("./app");
 
-const app = express();
+//5001 rather than 5000: macOS AirPlay Receiver already holds 5000
+const PORT = process.env.PORT || 5001;
 
-app.use(cors());
-app.use(express.json());
-app.use(requestLog);
-app.use("/api/properties", listingsRouter);
-
-app.get("/api/health", async (req, res) => {
-  try {
-    await pool.query("SELECT 1");
-    res.json({ status: "ok", database: "connected", timestamp: new Date().toISOString()});
-  } catch (error) {
-    res.status(500).json({ status: "error", database: "disconnected" });
-  }
-});
-
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

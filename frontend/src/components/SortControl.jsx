@@ -1,4 +1,5 @@
 import "./SortControl.css";
+import PropTypes from "prop-types";
 
 //The value is a single "<sortBy>-<sortOrder>" string so the whole choice lives
 //in one piece of state and one <select>, rather than two controls the user has
@@ -43,5 +44,11 @@ function SortControl({ value, onChange, disabled }) {
     </div>
   );
 }
+
+SortControl.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
 
 export default SortControl;

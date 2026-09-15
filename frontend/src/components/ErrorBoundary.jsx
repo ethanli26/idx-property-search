@@ -1,4 +1,5 @@
 import { Component } from "react";
+import PropTypes from "prop-types";
 import "./ErrorBoundary.css";
 
 //A render error anywhere below this point would otherwise unmount the whole
@@ -62,5 +63,9 @@ class ErrorBoundary extends Component {
     );
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node,
+};
 
 export default ErrorBoundary;

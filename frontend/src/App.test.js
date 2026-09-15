@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import App from "./App";
-import { loadListings } from "./services/listingsApi";
+import { loadListings } from "./api/listingsApi";
 
 //App mounts ListingsPage, which fetches on mount. The network is not what this asserts.
-jest.mock("./services/listingsApi", () => ({
+jest.mock("./api/listingsApi", () => ({
   loadListings: jest.fn(),
   loadPriceDistribution: jest.fn(),
 }));

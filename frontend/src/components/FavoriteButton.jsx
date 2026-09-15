@@ -1,5 +1,6 @@
 import { useFavorites } from "../hooks/useFavorites";
 import "./FavoriteButton.css";
+import PropTypes from "prop-types";
 
 function FavoriteButton({ listingId }) {
   const { isFavorite, toggle } = useFavorites();
@@ -25,5 +26,10 @@ function FavoriteButton({ listingId }) {
     </button>
   );
 }
+
+FavoriteButton.propTypes = {
+  listingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+};
 
 export default FavoriteButton;

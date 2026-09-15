@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { loadPriceDistribution } from "../services/listingsApi";
+import PropTypes from "prop-types";
+import { loadPriceDistribution } from "../api/listingsApi";
 import "./PriceBand.css";
 
 function abbreviate(value) {
@@ -275,5 +276,35 @@ function PriceBandPanel({ spread, pending, minPrice, maxPrice, onChange }) {
     </>
   );
 }
+
+//both components take the price as a string, because it comes straight from a
+//controlled input where "" means "no bound set"
+const priceValue = PropTypes.string.isRequired;
+
+PriceBand.propTypes = {
+  contextFilters: PropTypes.shape({
+    city: PropTypes.string,
+    zipcode: PropTypes.string,
+    beds: PropTypes.string,
+    baths: PropTypes.string,
+  }).isRequired,
+  minPrice: priceValue,
+  maxPrice: priceValue,
+  onChange: PropTypes.func.isRequired,
+};
+
+PriceBandPanel.propTypes = {
+  spread: PropTypes.shape({
+    low: PropTypes.number,
+    high: PropTypes.number,
+    bucketSize: PropTypes.number,
+    buckets: PropTypes.arrayOf(PropTypes.number),
+    capped: PropTypes.bool,
+  }),
+  pending: PropTypes.bool,
+  minPrice: priceValue,
+  maxPrice: priceValue,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default PriceBand;

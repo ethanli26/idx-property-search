@@ -1,4 +1,5 @@
 import "./Pagination.css";
+import PropTypes from "prop-types";
 
 //sentinel for a gap in the page run, kept distinct from any real page number
 const ELLIPSIS = "ellipsis";
@@ -124,5 +125,11 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
     </nav>
   );
 }
+
+Pagination.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+};
 
 export default Pagination;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { loadListingById, loadOpenHouses } from "../services/listingsApi";
+import { loadListingById, loadOpenHouses } from "../api/listingsApi";
 import { readPhotoUrls } from "../utils/photoData";
 import PropertyImageGallery from "../components/PropertyImageGallery";
 import PropertyMap from "../components/PropertyMap";

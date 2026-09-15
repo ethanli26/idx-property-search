@@ -1,4 +1,5 @@
 import "./PropertyMap.css";
+import PropTypes from "prop-types";
 
 function PropertyMap({ latitude, longitude, address }) {
   const lat = Number(latitude);
@@ -60,5 +61,12 @@ function PropertyMap({ latitude, longitude, address }) {
     </section>
   );
 }
+
+PropertyMap.propTypes = {
+  //the feed stores these as strings, and they are absent on some rows
+  latitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  longitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  address: PropTypes.string,
+};
 
 export default PropertyMap;

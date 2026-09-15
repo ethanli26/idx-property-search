@@ -6,7 +6,6 @@ import OpenHouseList from "./OpenHouseList";
 function openHouseRow(overrides = {}) {
   return {
     id: 1,
-    L_ListingID: "1001",
     OpenHouseDate: "2026-08-15",
     OH_StartTime: "13:00:00",
     OH_EndTime: "16:00:00",
@@ -26,11 +25,6 @@ describe("OpenHouseList", () => {
     expect(
       screen.getByText("Refreshments provided, street parking available.")
     ).toBeInTheDocument();
-  });
-
-  test("shows the date and a readable time window", () => {
-    render(<OpenHouseList openHouses={[openHouseRow()]} />);
-
     expect(screen.getByText("Saturday, August 15")).toBeInTheDocument();
     expect(screen.getByText("1:00 PM – 4:00 PM")).toBeInTheDocument();
   });
@@ -45,7 +39,7 @@ describe("OpenHouseList", () => {
       />
     );
 
-    //no remarks is a quiet omission, not a crash or an empty paragraph
+    //no remarks is a quiet omission, not a crash
     expect(screen.getAllByText("Saturday, August 15")).toHaveLength(2);
   });
 

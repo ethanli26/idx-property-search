@@ -9,6 +9,9 @@ node_modules/
 build/
 dist/
 
+#test coverage reports
+coverage/
+
 #logs
 *.log
 
@@ -20,3 +23,6 @@ dist/
 
 #company provided data
 *.sql
+
+#...but our own migrations are source, not data
+!backend/sql/*.sql

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { loadListingById } from "../services/listingsApi";
+import { loadListingById } from "../api/listingsApi";
 import { useFavorites } from "../hooks/useFavorites";
 import PropertyCard from "../components/PropertyCard";
 import "./FavoritesPage.css";

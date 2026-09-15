@@ -2,6 +2,7 @@ const express = require("express");
 const listingsRouter = express.Router();
 const pool = require("../db");
 const { buildFilterClause } = require("../utils/listingFilters");
+const { buildOrderClause } = require("../utils/listingSort");
 
 const BUCKET_COUNT = 28;
 
@@ -30,6 +31,13 @@ listingsRouter.get("/", async (req, res) => {
       }
     }
 
+    //an unrecognised sort is rejected rather than ignored, because silently
+    //returning unsorted rows looks like a broken control to the user
+    const { clause: orderClause, error: sortError } = buildOrderClause(req.query);
+    if (sortError) {
+      return res.status(400).json({ error: sortError });
+    }
+
     //build WHERE clause from whichever filters are present
     const { conditions, values } = buildFilterClause(req.query);
     const whereClause =
@@ -44,7 +52,7 @@ listingsRouter.get("/", async (req, res) => {
 
     //page query, the current page of matching rows
     const [rows] = await pool.query(
-      `SELECT * FROM rets_property ${whereClause} LIMIT ? OFFSET ?`,
+      `SELECT * FROM rets_property ${whereClause} ${orderClause} LIMIT ? OFFSET ?`,
       [...values, pageSize, skip]
     );
 
